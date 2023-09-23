@@ -86,7 +86,7 @@ model Ticket {
   TicketType   TicketType   @relation(fields: [ticketTypeId], references: [id])
   enrollmentId Int          @unique
   Enrollment   Enrollment   @relation(fields: [enrollmentId], references: [id])
-  status       TicketStatus
+  status       TicketStatus 
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   Payment      Payment?
