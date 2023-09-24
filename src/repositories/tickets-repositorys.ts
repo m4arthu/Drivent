@@ -31,15 +31,15 @@ const postTickets = async (ticket: CreateTicket) => {
     'price', "TicketType".price,
     'isRemote', "TicketType"."isRemote",
     'includesHotel', "TicketType"."includesHotel",
-    'createdAt', "TicketType"."createdAt",
-    'updatedAt', "TicketType"."updatedAt") AS "TicketType" FROM "Ticket" 
+    'createdAt', to_char("TicketType"."createdAt", 'YYYY-MM-DD"T"HH24:MI:SS.MS') || 'Z',
+    'updatedAt', to_char("TicketType"."updatedAt", 'YYYY-MM-DD"T"HH24:MI:SS.MS') || 'Z') AS "TicketType" FROM "Ticket" 
 
    JOIN "TicketType" ON
    "TicketType".id = ${ticket.ticketTypeId}   
    where "Ticket"."ticketTypeId" = ${ticket.ticketTypeId}
    GROUP BY "Ticket".id, "TicketType".id
    ;`;
-
+  createdTicket[0].createdAt = new Date(createdTicket[0].createdAt);
   return createdTicket[0];
 };
 
