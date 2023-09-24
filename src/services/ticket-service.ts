@@ -4,7 +4,7 @@ import { CreateTicket } from '@/protocols';
 import { enrollmentRepository, ticketsRepository } from '@/repositories';
 
 async function getTicketTypes() {
-  const ticketTypes = await ticketsRepository.getTickes();
+  const ticketTypes = await ticketsRepository.getTickesTypes();
   return ticketTypes;
 }
 async function postTicket(ticketTypeId: number, userId: number) {
@@ -23,11 +23,15 @@ async function postTicket(ticketTypeId: number, userId: number) {
   return await ticketsRepository.postTickets(createTicket);
 }
 
-async function getTicktesByUser(authorization: string) {
-  const token = authorization.replace('Bearer ', '');
-  const user = await prisma.session.findFirst({ where: { token } });
-  /// pegar tickets do  repositorio e  ajeitar os comendos por la
+async function getTicktesByUser(userId: number) {
+  const enrolment = await enrollmentRepository.findWithAddressByUserId(userId);
+  if (!enrolment) {
+    throw notFoundError();
+  }
+  const ticket = await ticketsRepository.getTickets(enrolment.id);
+  return ticket;
 }
+
 export const ticketService = {
   postTicket,
   getTicketTypes,
