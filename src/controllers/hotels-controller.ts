@@ -9,6 +9,13 @@ const getHotels = async (req: AuthenticatedRequest, res: Response) => {
   res.status(httpStatus.OK).send(hotels);
 };
 
+const getHotelsById = async (req: AuthenticatedRequest, res: Response) => {
+  const userId = req.userId;
+  const hotelId = req.params.id;
+  const hotels = await hotelService.getHotelsById(userId, Number(hotelId));
+  res.sendStatus(httpStatus.OK).send(hotels);
+};
 export const hotelsControllers = {
   getHotels,
+  getHotelsById,
 };
