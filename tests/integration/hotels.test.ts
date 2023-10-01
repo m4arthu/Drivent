@@ -88,7 +88,7 @@ describe('GET /hotels/:id', () => {
     const token = await generateValidToken(user);
     const enrollment = await createEnrollmentWithAddress(user);
     const ticketType = await createTicketType();
-    await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+    await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
     const hotel = await createHotel();
     const { status } = await server.get(`/hotels/${hotel.id}`).set('Authorization', `Bearer ${token}`);
     expect(status).toBe(httpStatus.PAYMENT_REQUIRED);
