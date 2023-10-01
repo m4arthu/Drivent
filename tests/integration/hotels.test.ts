@@ -1,17 +1,17 @@
 import httpStatus from 'http-status';
 import supertest from 'supertest';
-import { Hotel, TicketStatus } from '@prisma/client';
+import { Hotel, Room, TicketStatus } from '@prisma/client';
 import {
   createEnrollmentWithAddress,
   createHotel,
   createRemoteAndWithHotelTicketType,
+  createRooms,
   createTicket,
   createTicketType,
   createUser,
 } from '../factories';
 import { cleanDb, generateValidToken } from '../helpers';
 import app, { init } from '@/app';
-import { getTicket } from '@/controllers';
 
 const server = supertest(app);
 
@@ -90,9 +90,27 @@ describe('GET /hotels/:id', () => {
     const ticketType = await createRemoteAndWithHotelTicketType();
     await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
     const hotel = await createHotel();
-    // criar room para o hotel
+    await createRooms(hotel.id);
     const { status, body } = await server.get(`/hotels/${hotel.id}`).set('Authorization', `Bearer ${token}`);
     expect(status).toBe(httpStatus.OK);
-    // validar o  body
+    expect(body).toEqual(
+      expect.objectContaining({
+        id: expect.any(Number),
+        name: expect.any(String),
+        image: expect.any(String),
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        Rooms: expect.arrayContaining([
+          expect.objectContaining<Room>({
+            id: expect.any(Number),
+            name: expect.any(String),
+            capacity: expect.any(Number),
+            hotelId: expect.any(Number),
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+          }),
+        ]),
+      }),
+    );
   });
 });

@@ -1,6 +1,7 @@
 import { ticketsService } from './tickets-service';
 import { hotelsRepository } from '@/repositories';
 import { ticketNotPaid } from '@/errors/hotels-ticket-not-paid-error';
+import { notFoundError } from '@/errors';
 
 const getHotels = async (userId: number) => {
   await verifyUserEnrollmentAndTicket(userId);
@@ -17,7 +18,9 @@ const verifyUserEnrollmentAndTicket = async (userId: number) => {
 
 const getHotelsById = async (userId: number, hotelId: number) => {
   await verifyUserEnrollmentAndTicket(userId);
-  // pegar  o hotel  com os quartos do  banco
+  const hotel = await hotelsRepository.getHotelWithRooms(hotelId);
+  if (!hotel) throw notFoundError();
+  return hotel;
 };
 
 export const hotelService = {

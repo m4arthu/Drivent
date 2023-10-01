@@ -9,3 +9,12 @@ export const createHotel = () => {
     },
   });
 };
+export const createRooms = (hotelId: number) => {
+  return prisma.room.create({
+    data: {
+      capacity: 2,
+      name: faker.company.bsBuzz(),
+      hotelId: hotelId,
+    },
+  });
+};
