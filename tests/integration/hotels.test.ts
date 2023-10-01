@@ -64,6 +64,17 @@ describe('GET /hotels', () => {
       ]),
     );
   });
+
+  test('shold return 404 when  no  have hotels', async () => {
+    const user = await createUser();
+    const token = await generateValidToken(user);
+    const enrollment = await createEnrollmentWithAddress(user);
+    const ticketType = await createRemoteAndWithHotelTicketType();
+    await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+    const { status} = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
+    expect(status).toBe(httpStatus.NOT_FOUND);
+  });
+
 });
 
 describe('GET /hotels/:id', () => {
@@ -81,6 +92,16 @@ describe('GET /hotels/:id', () => {
     const hotel = await createHotel();
     const { status } = await server.get(`/hotels/${hotel.id}`).set('Authorization', `Bearer ${token}`);
     expect(status).toBe(httpStatus.PAYMENT_REQUIRED);
+  });
+
+  test('shold return 404 when  no  have hotel', async () => {
+    const user = await createUser();
+    const token = await generateValidToken(user);
+    const enrollment = await createEnrollmentWithAddress(user);
+    const ticketType = await createRemoteAndWithHotelTicketType();
+    await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+    const { status} = await server.get('/hotels/1').set('Authorization', `Bearer ${token}`);
+    expect(status).toBe(httpStatus.NOT_FOUND);
   });
 
   test('Should return 200 and a hotel with room when user have a valid ticket', async () => {

@@ -5,7 +5,8 @@ import { notFoundError } from '@/errors';
 
 const getHotels = async (userId: number) => {
   await verifyUserEnrollmentAndTicket(userId);
-  const hotels = hotelsRepository.getHotels();
+  const hotels = await hotelsRepository.getHotels();
+  if(hotels.length === 0) throw notFoundError()
   return hotels;
 };
 
@@ -19,7 +20,7 @@ const verifyUserEnrollmentAndTicket = async (userId: number) => {
 const getHotelsById = async (userId: number, hotelId: number) => {
   await verifyUserEnrollmentAndTicket(userId);
   const hotel = await hotelsRepository.getHotelWithRooms(hotelId);
-  if (!hotel) throw notFoundError();
+  if (hotel.id === undefined) throw notFoundError();
   return hotel;
 };
 
