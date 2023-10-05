@@ -2,7 +2,6 @@ import 'reflect-metadata';
 import 'express-async-errors';
 import express, { Express } from 'express';
 import cors from 'cors';
-import { hotelsRouter } from './routers/hotels-router';
 import { handleApplicationErrors } from '@/middlewares';
 import {
   usersRouter,
@@ -11,6 +10,7 @@ import {
   enrollmentsRouter,
   ticketsRouter,
   paymentsRouter,
+  hotelsRouter,
 } from '@/routers';
 import { loadEnv, connectDb, disconnectDB } from '@/config';
 

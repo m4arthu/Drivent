@@ -1,25 +1,19 @@
 import { Response } from 'express';
 import httpStatus from 'http-status';
 import { AuthenticatedRequest } from '@/middlewares';
-import { hotelService } from '@/services/hotels-service';
-import { invalidDataError } from '@/errors';
+import { hotelsService } from '@/services';
 
-const getHotels = async (req: AuthenticatedRequest, res: Response) => {
-  const userId = req.userId;
-  const hotels = await hotelService.getHotels(userId);
-  res.status(httpStatus.OK).send(hotels);
-};
+export async function getHotels(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
 
-const getHotelsById = async (req: AuthenticatedRequest, res: Response) => {
-  const userId = req.userId;
-  const hotelId = req.params.id;
-  if (isNaN(Number(hotelId))) {
-    throw invalidDataError('must provide a valid hotelId');
-  }
-  const hotels = await hotelService.getHotelsById(userId, Number(hotelId));
+  const hotels = await hotelsService.getHotels(userId);
   res.status(httpStatus.OK).send(hotels);
-};
-export const hotelsControllers = {
-  getHotels,
-  getHotelsById,
-};
+}
+
+export async function getHotelsWithRooms(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+  const hotelId = Number(req.params.hotelId);
+
+  const hotelWithRooms = await hotelsService.getHotelsWithRooms(userId, hotelId);
+  res.status(httpStatus.OK).send(hotelWithRooms);
+}
