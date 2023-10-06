@@ -16,10 +16,12 @@ beforeEach(async()=>{
 })
 
 describe("Get /booking",  ()=>{
+
     test("Shold return 401 when user token is  invalid or missing",async()=>{
         const {status} = await server.get("/booking")
         expect(status).toBe(httpStatus.UNAUTHORIZED)
     })
+
     test("Should return status  200 with booking when token is valid",async()=>{
         const user = await createUser()
         const token = await generateValidToken(user)
@@ -40,4 +42,12 @@ describe("Get /booking",  ()=>{
             })
        }))
     })
+ 
+    test("Should return 404 when token  is valid and roomId does not exist", async()=>{
+        const token  = await generateValidToken()
+        const {status} = await server.post("/booking").send({roomId: 1}).set("Authorization", `Bearer ${token}`)
+        expect(status).toBe(httpStatus.NOT_FOUND)
+    })
+
+
 })

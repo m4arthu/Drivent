@@ -9,8 +9,11 @@ const  getUserBooking = async (req:AuthenticatedRequest, res:Response) =>{
     res.send(bookingId)
 }
 
-const postBooking = async () => {
-
+const postBooking = async (req:AuthenticatedRequest, res:Response) => {
+    const  {roomId} = req.body
+    const userId  = req.userId
+    const postBooking = await bookingServices.postBooking(userId,roomId)
+    return postBooking // return  the id of  the booking if it created
 }
 
 export const bookingController = {

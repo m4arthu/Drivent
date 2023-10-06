@@ -21,5 +21,6 @@ const postBooking = async (userId:number,roomId:number) => {
 }
 
 export const  bookingServices  = {
-    getBooking
+    getBooking,
+    postBooking
 }
