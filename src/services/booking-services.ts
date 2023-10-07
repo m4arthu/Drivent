@@ -6,7 +6,7 @@ import { bookingRepository } from "@/repositories/booking-repository"
 
 const  getBooking = async (userId: number) =>  {
    const booking  = await bookingRepository.getBooking(userId)
-   if(booking.id === undefined){
+   if(!booking){
     throw notFoundError()
    }
    return booking
