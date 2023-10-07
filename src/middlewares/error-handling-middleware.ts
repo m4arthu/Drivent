@@ -62,8 +62,8 @@ export function handleApplicationErrors(
     return res.status(httpStatus.PAYMENT_REQUIRED).send(err.message);
   }
 
-  if(err.name === 'Room with max capacity') {
-    return res.sendStatus(httpStatus.FORBIDDEN)
+  if(err.name === "Room with max capacity") {
+    return res.status(httpStatus.FORBIDDEN).send(err.name)
   }
  
   if (err.hasOwnProperty('status') && err.name === 'RequestError') {
