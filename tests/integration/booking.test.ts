@@ -72,3 +72,30 @@ describe("POST /booking",()=>{
         }))
     })
 })
+
+describe("PUT /booking",()=>{
+    test("Should return 403 when user not have  an  reservation",async()=>{
+        const token   = await generateValidToken()
+        const hotel  = await createHotel()
+        const response = await server.put("/booking/2").set("Authorization", `Bearer ${token}`)
+        expect(response.status).toBe(httpStatus.FORBIDDEN)
+    })
+
+    test("Should return  the new bookinId when  hthe condition  are satisfied",async()=>{
+        const user = await createUser()
+        const token = await generateValidToken(user)
+        const hotel  = await createHotel()
+        const room = await createRoomWithHotelId(hotel.id)
+        const enrolment = await createEnrollmentWithAddress(user)
+        const ticketType = await createTicketType(false,true)
+        await createTicket(enrolment.id,ticketType.id,"PAID")
+        await server.post("/booking").send({roomId: room.id}).set("Authorization", `Bearer ${token}`)
+        const room2 = await createRoomWithHotelId(hotel.id)
+        const response = await server.put(`/booking/${room2.id}`).set("Authorization", `Bearer ${token}`)
+        expect(response.status).toBe(httpStatus.OK)
+        expect(response.body).toEqual(expect.objectContaining({
+            bookingId: expect.any(Number)
+        }))
+
+    })
+})

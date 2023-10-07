@@ -30,7 +30,16 @@ const postBooking = async (userId:number,roomId:number) => {
    return booking
   }
 
+  const putBooking = async(userId:number,roomId:number) => {
+    const booking = await prisma.booking.update({
+      where: {userId:userId},
+      data : {roomId:roomId}
+    })
+    return booking
+  }
+
 export const bookingRepository = {
     getBooking,
-    postBooking
+    postBooking,
+    putBooking, // edit the booking room
 }

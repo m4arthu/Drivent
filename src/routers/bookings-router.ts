@@ -8,4 +8,5 @@ bookingRouter
 .all('/*', authenticateToken)
 .get('/', bookingController.getUserBooking)
 .post('/',bookingController.postBooking)
+.put('/:id',bookingController.putBooking)
 export {bookingRouter}
